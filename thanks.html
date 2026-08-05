@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HomeScreen</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Thai:wght@100..800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/thanks.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="quotethanks1">
+    <h1>ขอบคุณที่ให้เราได้เป็นพื้นที่เล็กๆ ของเธอ</h1>
+</div>
+
+<div class="quotethanks2">
+
+<h2>วันนี้เธอทำได้ดีมากแล้วนะ</h2>
+
+</div>
+
+
+<button class="end-btn" onclick="startApp()">
+กลับสู่หน้าหลัก
+</button>
+
+<div class="logo">
+firstKind.theory
+</div>
+
+</div>
+
+<script>
+
+function startApp(){
+
+    document.body.style.transition="0.5s";
+    document.body.style.opacity="0";
+
+    setTimeout(function(){
+
+        window.location.href="homescreen.html";
+
+    },500);
+
+}
+
+</script>
+
+</body>
+</html>

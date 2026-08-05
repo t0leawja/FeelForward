@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>อธิบายปัญหา</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/explain.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="icon">
+💭
+</div>
+
+<h2 class="title">
+ระบุปัญหาของคุณ
+</h2>
+
+<p class="desc">
+
+กรุณาใช้ถ้อยคำสุภาพรวมถึงไม่ใช้คำหยาบคาย<br>
+ในการสนทนากับผู้ให้คำปรึกษา
+
+
+<br><br>
+
+🔒 ข้อมูลของคุณจะถูกเก็บเป็นความลับ<br>
+และผู้ให้คำปรึกษาจะรับฟังโดยไม่ตัดสิน
+
+</p>
+<textarea
+id="problem"
+placeholder="กรุณาอธิบายปัญหาของคุณเบื้องต้น..."
+></textarea>
+
+<button class="buttonexplain" onclick="nextStep()">
+เริ่มค้นหาผู้ให้คำปรึกษา
+</button>
+
+</p>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+doc,
+setDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+async function nextStep(){
+
+    const problem =
+    document.getElementById("problem").value.trim();
+
+
+    if(problem === ""){
+
+        alert("กรุณาอธิบายปัญหาก่อน");
+
+        return;
+
+    }
+
+
+    const topic =
+    localStorage.getItem("topic");
+
+
+    const roomID = crypto.randomUUID();
+
+localStorage.setItem("roomID", roomID);
+
+await setDoc(doc(db, "chats", roomID), {
+
+    topic: topic,
+    problem: problem,
+    username: localStorage.getItem("username"),
+    userID: roomID,
+    status: "waiting",
+    createdAt: Date.now()
+
+});
+
+
+    window.location.href="wait.html";
+
+}
+
+
+window.nextStep = nextStep;
+
+
+</script>
+
+</body>
+</html>

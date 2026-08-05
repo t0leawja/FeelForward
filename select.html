@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Anonymous Chat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/select.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<h3>
+- Category -
+</h3>
+
+
+<p class="description">
+    เลือกหัวข้อที่ต้องการพูดคุย
+</p>
+
+<button class="button5 love" onclick="joinChat('love')">
+    ความรัก
+</button>
+
+<button class="button5 study" onclick="joinChat('study')">
+    การเรียน
+</button>
+
+<button class="button5 family" onclick="joinChat('family')">
+    ครอบครัว
+</button>
+
+<button class="button5 friend" onclick="joinChat('friend')">
+    เพื่อน
+</button>
+
+<button class="button5 other" onclick="joinChat('other')">
+    อื่น ๆ
+</button>
+
+</div>
+
+
+
+<script>
+
+function joinChat(room){
+
+    localStorage.setItem("topic", room);
+
+    window.location.href = "explain.html";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

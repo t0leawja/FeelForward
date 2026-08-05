@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/admin-dashboard.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard">
+
+
+<h4>📋 ห้องรอรับเคส</h4>
+
+<select id="topicSelect">
+    <option value="love">💗 ความรัก</option>
+    <option value="study">📚 การเรียน</option>
+    <option value="family">🏠 ครอบครัว</option>
+    <option value="friend">🤝 เพื่อน</option>
+    <option value="other">💬 อื่น ๆ</option>
+</select>
+
+<div id="rooms">
+กำลังโหลด...
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db } from "./firebase.js";
+
+
+import {
+
+collection,
+query,
+where,
+onSnapshot,
+updateDoc,
+doc
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+
+// ดึงห้องที่ยังไม่มี Admin
+
+const topicSelect = document.getElementById("topicSelect");
+
+let unsubscribe = null;
+
+function loadRooms() {
+
+    if (unsubscribe) {
+        unsubscribe();
+    }
+
+    const q = query(
+        collection(db, "chats"),
+        where("status", "==", "waiting"),
+        where("topic", "==", topicSelect.value)
+    );
+
+    unsubscribe = onSnapshot(q, (snapshot) => {
+
+const box=document.getElementById("rooms");
+
+box.innerHTML="";
+
+if(snapshot.empty){
+
+box.innerHTML="ไม่มีเคส";
+
+return;
+
+}
+
+snapshot.forEach((item)=>{
+
+    console.log("ADMIN roomID =", item.id);
+
+const data=item.data();
+const topicMap = {
+    love: "💗 ความรัก",
+    study: "📚 การเรียน",
+    family: "🏠 ครอบครัว",
+    friend: "🤝 เพื่อน",
+    other: "💬 อื่น ๆ"
+};
+
+const topicName = topicMap[data.topic] || data.topic;
+
+const div=document.createElement("div");
+
+div.className="room";
+
+div.innerHTML = `
+
+<p class="info-text">
+<b>ชื่อผู้ขอคำปรึกษา</b><br>
+${data.username || "-"}
+</p>
+
+<p class="info-text">
+<b>ปัญหาเบื้องต้น</b><br>
+${data.problem || "-"}
+</p>
+
+<button>
+รับเคส
+</button>
+
+`;
+
+
+div.querySelector("button").onclick = async () => {
+
+    const roomRef = doc(db, "chats", item.id);
+
+    await updateDoc(roomRef, {
+        status: "active",
+        adminID: "admin01",
+        acceptedAt: Date.now()
+    });
+
+    localStorage.setItem("role", "admin");
+
+    window.location.href =
+        "admin-chat.html?roomID=" + item.id;
+
+};
+
+box.appendChild(div);
+
+});
+
+});
+
+}
+
+loadRooms();
+
+topicSelect.onchange = loadRooms;
+
+
+</script>
+
+
+</body>
+</html>

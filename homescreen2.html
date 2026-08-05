@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HomeScreen</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Playpen+Sans+Thai:wght@100..800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/homelock2.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="quote2">
+
+<h1>ที่ตรงนี้...ปลอดภัย</h1>
+<h1>สำหรับหัวใจของคุณ</h1>
+
+<h2>จะเล่า จะพักใจ หรือแค่อยากมีใครอยู่ข้างๆ</h2>
+
+<h2>เรายินดีอยู่ตรงนี้เสมอ</h2>
+
+</div>
+
+<button class="start-btn2" onclick="startApp()">
+เริ่ม
+</button>
+
+<div class="logo2">
+firstKind.theory
+</div>
+
+</div>
+
+<script>
+
+function startApp(){
+
+    document.body.style.transition="0.5s";
+    document.body.style.opacity="0";
+
+    setTimeout(function(){
+
+        window.location.href="admin-login.html";
+
+    },500);
+
+}
+
+</script>
+
+</body>
+</html>

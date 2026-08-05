@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กำลังรอผู้ให้คำปรึกษา</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/wait.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="boxwait">
+
+<h2>💬 กำลังค้นหา<h2>
+<h2>ผู้ให้คำปรึกษา<h2>
+
+<div class="loader"></div>
+
+<p>กรุณารอสักครู่...</p>
+
+</div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+    doc,
+    setDoc,
+    onSnapshot,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const topic = localStorage.getItem("topic");
+const username = localStorage.getItem("username");
+
+let roomID = localStorage.getItem("roomID");
+
+console.log("WAIT roomID =", roomID);
+
+async function init() {
+
+    const roomRef = doc(db, "chats", roomID);
+
+const unsubscribe = onSnapshot(roomRef, (snapshot) => {
+
+    if (!snapshot.exists()) return;
+
+    const data = snapshot.data();
+
+    console.log("status =", data.status);
+
+    if (data.status === "active") {
+
+        unsubscribe();
+
+        window.location.replace(
+            "chat.html?roomID=" + roomID
+        );
+
+    }
+
+});
+
+}
+
+init();
+
+
+</script>
+</body>
+</html>

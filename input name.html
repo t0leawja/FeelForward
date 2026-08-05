@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>UserName</title>
+
+<link rel="stylesheet" href="css/inputname.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="card4">
+
+<div class="logo4">💬</div>
+
+<h1>username</h1>
+
+<p class="subtitle4">
+ตั้งชื่อสำหรับการสนทนา<br>
+(ไม่จำเป็นต้องใช้ชื่อจริง)
+</p>
+
+<div class="input-box">
+
+<input
+type="text"
+id="username"
+placeholder="Ex. BTS, พี่หมี">
+
+</div>
+
+<button class="button4" onclick="nextPage()">
+    START
+</button>
+
+<div class="note">
+
+FirstKind.Theory<br>
+
+</div>
+
+</div>
+
+<script>
+
+function nextPage(){
+
+    const username =
+    document.getElementById("username").value.trim();
+
+    if(username==""){
+
+        alert("กรุณาตั้งชื่อก่อน");
+
+        return;
+
+    }
+
+    localStorage.setItem("username",username);
+
+    window.location.href="select.html";
+
+}
+
+// กด Enter เพื่อเริ่ม
+document.getElementById("username").addEventListener("keydown", function(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+        nextPage();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

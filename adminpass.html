@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FeelForward - เข้าสู่ระบบ</title>
+
+<link rel="stylesheet" href="css/adminpass.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+<div class="cardpass">
+
+<div class="logopass">🔒</div>
+
+<h1>SafeTalk</h1>
+
+<p>กรุณากรอกรหัสเข้าใช้งาน</p>
+
+<form onsubmit="return login()">
+
+<input
+type="password"
+id="password"
+placeholder="password">
+
+<button class="buttonpass" type="submit">
+login
+</button>
+
+</form>
+
+<div class="error" id="error">
+รหัสไม่ถูกต้อง
+</div>
+
+<script>
+
+function login(){
+
+    const password = document.getElementById("password").value;
+
+    if(password === "123456"){
+
+        window.location.href = "admin-dashboard.html";
+        return false; // ป้องกันการ submit ฟอร์ม
+
+    }else{
+
+        document.getElementById("error").style.display = "block";
+        return false;
+    }
+
+}
+
+</script>
+
+</body>
+</html>
