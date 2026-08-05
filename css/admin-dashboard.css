@@ -1,0 +1,108 @@
+/* admin-dashboard */
+*{
+    box-sizing:border-box;
+    font-family:Prompt,sans-serif;
+}
+
+
+body{
+
+    margin:0;
+    height: 100dvh;
+    background:#d6ebf9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+
+.dashboard{
+    width:75%;
+    max-width:450px;
+    background:white;
+    border-radius:40px;
+    padding:20px;
+    height:95dvh;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+    margin:0px auto;
+    
+}
+
+
+h4{
+    font-size:20px;
+    text-align:center;
+    color:#000000;
+    margin-top:10px;
+    margin-bottom:15px;
+}
+
+
+.room{
+    font-size:19px;
+    background:#f8f9ff;
+    border:1px solid #ddd;
+    border-radius:15px;
+    overflow-wrap:anywhere;
+    margin-bottom: 15px;
+    padding:0px 15px 15px;
+}
+
+
+button{
+
+    font-size:15px;
+    width:100%;
+    padding:7px;
+    border:none;
+    border-radius:40px;
+    background:#513229;
+    color:white;
+    cursor:pointer;
+    margin-top:10px;
+
+}
+
+.tabs{
+
+    display:flex;
+    gap:8px;
+    margin-bottom:20px;
+    overflow-x:auto;
+
+}
+
+.tab{
+
+    padding:10px 18px;
+    border-radius:20px;
+    background:#E5E7EB;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:.2s;
+
+}
+
+.tab.active{
+
+    font-size:15px;
+    background:#513229;
+    color:white;
+
+}
+
+select{
+    width:100%;
+    padding:6px;
+    margin-bottom:20px;
+    border-radius:15px;
+    border:1px solid #ccc;
+    font-size:14px;
+}
+
+.info-text{
+    margin-bottom:10px;
+    font-size: 14px;
+    color: black;
+}
