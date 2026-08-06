@@ -65,15 +65,14 @@ import { db } from "./firebase.js";
 
 
 import {
-
-collection,
-addDoc,
-query,
-orderBy,
-onSnapshot,
-doc,
-updateDoc
-
+    collection,
+    addDoc,
+    query,
+    orderBy,
+    onSnapshot,
+    doc,
+    getDocs,
+    deleteDoc   
 }
 
 from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
@@ -83,6 +82,8 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 let roomID;
 
 let messagesRef;
+
+let roomDeleted = false;
 
 const role = localStorage.getItem("role") || "user";
 
@@ -257,35 +258,57 @@ window.sendMessage = async function(){
 
 };
 
-
-
-
 window.enterSend = function(event){
-
-
 if(event.key==="Enter"){
-
-
 sendMessage();
+}
 
+async function deleteRoom() {
+
+    if (!roomID || roomDeleted) return;
+
+    roomDeleted = true;
+
+    try {
+
+        // ลบข้อความทั้งหมด
+        const messagesSnapshot = await getDocs(
+            collection(db, "chats", roomID, "messages")
+        );
+
+        for (const message of messagesSnapshot.docs) {
+            await deleteDoc(message.ref);
+        }
+
+        // ลบห้อง
+        await deleteDoc(doc(db, "chats", roomID));
+
+    } catch (e) {
+
+        console.error("ลบห้องไม่สำเร็จ", e);
+
+    }
 
 }
 
-
 };
+
 window.exitChat = async function () {
 
-    const roomRef = doc(db, "chats", roomID);
-
-    await updateDoc(roomRef, {
-        status: "closed"
-    });
+    await deleteRoom();
 
     localStorage.removeItem("roomID");
     localStorage.removeItem("room");
 
-    location.href = "thanks.html";
+    location.replace = "thanks.html";
+
 };
+
+window.addEventListener("pagehide", () => {
+
+    deleteRoom();
+
+});
 
 window.addEventListener("focusin", () => {
     console.log(window.scrollY);
