@@ -36,9 +36,30 @@ body{
     background:#513229;
     color:white;
     padding:13px;
-    font-size:20px;
-    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
     
+}
+
+
+.header h6{
+    color:white;
+    margin:0;
+    font-size:20px;
+}
+
+
+.exit{
+
+    background:#ef4444;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+
 }
 
 
