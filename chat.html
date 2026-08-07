@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Chat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/chat.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head>
+<body>
+
+<div class="chat-box">
+
+
+<div class="header">
+
+<h2>
+💬 CHAT
+</h2>
+
+
+<button class="exit" onclick="exitChat()">
+ออก
+</button>
+
+
+</div>
+
+
+<div class="messages" id="messages">
+</div>
+
+
+<div class="input-area">
+    <textarea id="message"
+        placeholder="พิมพ์ข้อความ..."></textarea>
+
+    <button class="send-btn"
+onclick="sendMessage()">
+ส่ง
+</button>
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { db } from "./firebase.js";
+
+
+import {
+
+collection,
+addDoc,
+query,
+orderBy,
+onSnapshot,
+doc,
+updateDoc,
+deleteDoc
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+
+
+let roomID;
+
+let messagesRef;
+
+let roomRef;
+
+const role = localStorage.getItem("role") || "user";
+
+async function init(){
+
+roomID = new URLSearchParams(location.search).get("roomID") 
+|| localStorage.getItem("roomID");
+
+if(!roomID){
+
+    alert("ไม่พบห้องสนทนา");
+
+    location.href = "select.html";
+
+    return;
+
+}
+
+// ฟังสถานะของห้อง
+ roomRef = doc(db, "chats", roomID);
+
+let isClosing = false;
+
+onSnapshot(roomRef, async (snap) => {
+
+    if (!snap.exists() || isClosing) return;
+
+    const data = snap.data();
+
+    console.log(data);
+
+    // แสดงสถานะกำลังพิมพ์
+    
+window.isTyping = (data.typing === "admin");
+
+startChat();
+
+const box = document.getElementById("messages");
+
+box.scrollTop = box.scrollHeight;
+
+    if (data.status === "closed" && data.closedBy === "admin") {
+
+        isClosing = true;
+
+        alert("ผู้ให้คำปรึกษาได้ออกจากห้องแชทแล้ว");
+
+        await deleteDoc(roomRef);
+
+        localStorage.removeItem("roomID");
+        localStorage.removeItem("room");
+
+        location.href = "thanks.html";
+    }
+
+});
+
+messagesRef =
+collection(
+db,
+"chats",
+roomID,
+"messages"
+);
+
+
+
+startChat();
+
+
+
+}
+
+
+init();
+
+const textarea = document.getElementById("message");
+
+let typingTimer;
+
+console.log(textarea.scrollHeight);
+
+textarea.style.height = "45px";
+
+textarea.addEventListener("input", async () => {
+
+    textarea.style.height = "45px";
+
+    const newHeight = Math.min(
+        textarea.scrollHeight,
+        120
+    );
+
+    textarea.style.height = newHeight + "px";
+
+    // ผู้ใช้กำลังพิมพ์
+    await updateDoc(roomRef, {
+        typing: "user"
+    });
+
+    clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(async () => {
+
+        // หยุดพิมพ์แล้ว
+        await updateDoc(roomRef, {
+            typing: ""
+        });
+
+    }, 1000);
+
+});
+
+textarea.addEventListener("keydown", (event) => {
+
+    if(event.key === "Enter" && !event.shiftKey){
+        event.preventDefault();
+        sendMessage();
+    }
+
+})
+
+
+function startChat(){
+
+const q = query(
+messagesRef,
+orderBy("time")
+);
+
+
+
+onSnapshot(q,(snapshot)=>{
+
+
+const box = document.getElementById("messages");
+
+box.innerHTML="";
+
+snapshot.forEach((doc)=>{
+
+const data = doc.data();
+
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"message " +
+(data.sender==="user"
+? "send"
+: "receive");
+
+
+
+div.innerHTML = `
+
+<div>
+${data.text}
+</div>
+
+<small>
+${data.createdAt || ""}
+</small>
+
+`;
+
+box.appendChild(div);
+
+});
+
+if (window.isTyping) {
+
+    const typing = document.createElement("div");
+
+    typing.className = "typing-bubble show";
+
+    typing.innerHTML = `
+        <span class="typing-text">กำลังพิมพ์</span>
+
+        <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+
+    box.appendChild(typing);
+}
+
+
+box.scrollTop = box.scrollHeight;
+
+});
+
+}
+
+
+
+window.sendMessage = async function(){
+
+    const textarea = document.getElementById("message");
+
+    const msg = textarea.value.trim();
+
+    if(msg === "") return;
+
+    await addDoc(
+        messagesRef,
+        {
+            text: msg,
+            sender: "user",
+            time: Date.now(),
+            createdAt: new Date().toLocaleTimeString(
+                "th-TH",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            )
+        }
+    );
+
+    // ล้างข้อความ
+    textarea.value = "";
+
+    await updateDoc(roomRef, {
+    typing: ""
+});
+
+    // รีเซ็ตความสูงของกล่องข้อความ
+    textarea.style.height = "auto";
+    textarea.style.height = "40px";
+
+};
+
+
+
+
+window.enterSend = function(event){
+
+
+if(event.key==="Enter"){
+
+
+sendMessage();
+
+
+}
+
+
+};
+
+
+window.exitChat = async function () {
+
+    const ok = confirm("ต้องการออกจากห้องแชทใช่หรือไม่?");
+
+    if (!ok) return;
+
+
+    await updateDoc(roomRef, {
+        status: "closed",
+        closedBy: "user"
+    });
+
+    localStorage.removeItem("roomID");
+    localStorage.removeItem("room");
+
+    location.href = "thanks.html";
+};
+
+
+window.addEventListener("focusin", () => {
+    console.log(window.scrollY);
+});
+
+</script>
+
+
+</body>
+
+</html>
